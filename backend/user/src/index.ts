@@ -16,6 +16,12 @@ export const redisClient = createClient({
   url: process.env.REDIS_URL,
 });
 
+const allowedOrigins = [
+  "https://major-project-theta-eight.vercel.app",
+  "https://major-project-git-main-upanish522s-projects.vercel.app",
+  "https://major-project-5mbz9d55q-upanish522s-projects.vercel.app",
+];
+
 redisClient
   .connect()
   .then(() => console.log("connected to redis"))
@@ -25,8 +31,17 @@ const app = express();
 
 app.use(express.json());
 
+
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
 }));
 
