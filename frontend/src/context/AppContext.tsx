@@ -9,6 +9,11 @@ import {
 } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
+
+// Create a custom axios instance with withCredentials: true
+const axiosInstance = axios.create({
+  withCredentials: true,
+});
 import toast, { Toaster } from "react-hot-toast";
 
 export const user_service = "http://localhost:5000";
@@ -67,7 +72,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     try {
       const token = Cookies.get("token");
 
-      const { data } = await axios.get(`${user_service}/api/v1/me`, {
+      const { data } = await axiosInstance.get(`${user_service}/api/v1/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -93,7 +98,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   async function fetchChats() {
     const token = Cookies.get("token");
     try {
-      const { data } = await axios.get(`${chat_service}/api/v1/chat/all`, {
+      const { data } = await axiosInstance.get(`${chat_service}/api/v1/chat/all`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -111,7 +116,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const token = Cookies.get("token");
 
     try {
-      const { data } = await axios.get(`${user_service}/api/v1/user/all`, {
+      const { data } = await axiosInstance.get(`${user_service}/api/v1/user/all`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
